@@ -34,7 +34,11 @@ namespace OcphSMSLib
         
         public Modem(string portName)
         {
-            this.portName = portName;
+            this.PortName = portName;
+            serial = new SerialPort();
+        }
+        public Modem()
+        {
             serial = new SerialPort();
         }
         public SerialPort Port
@@ -95,6 +99,8 @@ namespace OcphSMSLib
                 serial.ReadTimeout = this.ReadTimeOut;
                 serial.WriteTimeout = this.WriteTimeOut;
                 serial.DataReceived += new SerialDataReceivedEventHandler(serial_DataReceived);
+                serial.PinChanged += Serial_PinChanged;
+                serial.ErrorReceived += Serial_ErrorReceived;
                 serial.Open();
                 serial.DtrEnable = true;
                 serial.RtsEnable = true;
@@ -109,6 +115,16 @@ namespace OcphSMSLib
                 
             }
             return Connected;
+        }
+
+        private void Serial_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        {
+           // throw new NotImplementedException();
+        }
+
+        private void Serial_PinChanged(object sender, SerialPinChangedEventArgs e)
+        {
+          //  throw new NotImplementedException();
         }
 
         private void serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
